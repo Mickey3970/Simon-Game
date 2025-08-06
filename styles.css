@@ -20,7 +20,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px; /* This creates space between the buttons */
+  gap: 50px; /* Increased the gap for more spacing */
   max-width: 600px;
   margin: auto;
   padding: 20px;
@@ -29,9 +29,9 @@ body {
 .btn {
   height: 150px;
   width: 150px;
-  border: 4px solid #fff; /* Individual border */
+  border: 4px solid #fff;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Individual shadow */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
@@ -42,8 +42,8 @@ body {
 }
 
 .btn:active {
-  transform: scale(0.95) translateY(5px); /* Effect on click */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Shadow change on click */
+  transform: scale(0.95) translateY(5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .red {
