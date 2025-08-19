@@ -1,43 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Simon</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>Simon</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-</head>
+  <body>
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+      <button class="theme-btn active" onclick="setTheme('default')">
+        Default
+      </button>
+      <button class="theme-btn" onclick="setTheme('space-theme')">Space</button>
+      <button class="theme-btn" onclick="setTheme('synthwave-theme')">
+        Synthwave
+      </button>
+    </div>
 
-<body>
-  <h1 id="level-title">Press A Key to Start</h1>
-  <div class="container">
-    <div lass="row">
+    <h1 id="level-title">Press A Key to Start</h1>
 
-      <div type="button" id="green" class="btn green">
-
+    <div class="container">
+      <div class="row">
+        <div type="button" id="green" class="btn green"></div>
+        <div type="button" id="red" class="btn red"></div>
       </div>
 
-      <div type="button" id="red" class="btn red">
-
+      <div class="row">
+        <div type="button" id="yellow" class="btn yellow"></div>
+        <div type="button" id="blue" class="btn blue"></div>
       </div>
     </div>
 
-    <div class="row">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="game.js" charset="utf-8"></script>
 
-      <div type="button" id="yellow" class="btn yellow">
+    <!-- Theme switching script -->
+    <script>
+      function setTheme(themeName) {
+        // Remove all theme classes
+        document.body.classList.remove("space-theme", "synthwave-theme");
 
-      </div>
-      <div type="button" id="blue" class="btn blue">
+        // Add the selected theme class (if not default)
+        if (themeName !== "default") {
+          document.body.classList.add(themeName);
+        }
 
-      </div>
+        // Update active button styling
+        document
+          .querySelectorAll(".theme-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
 
-    </div>
+        // Save theme preference
+        localStorage.setItem("selectedTheme", themeName);
+      }
 
-  </div>
+      // Load saved theme on page load
+      window.addEventListener("load", function () {
+        const savedTheme = localStorage.getItem("selectedTheme") || "default";
+        setTheme(savedTheme);
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="game.js" charset="utf-8"></script>
-
-</body>
-
+        // Update the active button without triggering the event
+        document.querySelectorAll(".theme-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          if (
+            (savedTheme === "default" && btn.textContent === "Default") ||
+            (savedTheme === "space-theme" && btn.textContent === "Space") ||
+            (savedTheme === "synthwave-theme" &&
+              btn.textContent === "Synthwave")
+          ) {
+            btn.classList.add("active");
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
