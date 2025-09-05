@@ -36,8 +36,48 @@
       </div>
     </div>
 
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2>Welcome to Simon!</h2>
+        <p>Choose how you want to play</p>
+        <button id="guest-auth-btn" class="modal-btn">Play as Guest</button>
+        <button id="google-auth-btn" class="modal-btn google">
+          Sign in with Google
+        </button>
+      </div>
+    </div>
+
+    <div class="scoreboard-btns">
+      <button id="global-scores-btn" class="scoreboard-btn">
+        Global Highscores
+      </button>
+    </div>
+
+    <!-- Global Scoreboard Modal -->
+    <div id="global-score-modal" class="score-modal-overlay">
+      <div class="score-modal-card" id="global-score-content"></div>
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="game.js" charset="utf-8"></script>
+
+    <!-- Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyA6XDXBxF4emgPkiC4QQWy3Nu8b2XNkgOI",
+        authDomain: "simon-game-cec07.firebaseapp.com",
+        projectId: "simon-game-cec07",
+        storageBucket: "simon-game-cec07.firebasestorage.app",
+        messagingSenderId: "927771552176",
+        appId: "1:927771552176:web:cd778559998503232a4e75",
+        measurementId: "G-VC37RGDKSF",
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="game.js"></script>
 
     <!-- Theme switching script -->
     <script>
