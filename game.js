@@ -251,7 +251,8 @@ document.addEventListener("keydown", function (e) {
 // Button events
 
 document.getElementById("global-scores-btn").onclick = function () {
-  openScoreModal("global");
+  document.getElementById("global-score-modal").style.display = "block";
+  showGlobalScores();
 };
 
 function loadGlobalScores() {
@@ -320,24 +321,47 @@ function loadGlobalScores() {
 
 function saveScore(level) {
   const user = firebase.auth().currentUser;
-  if (!user) return;
+  if (!user || user.isAnonymous) return; // Only save for Google users
+
+  const username = user.displayName || "Anonymous";
+  const userId = user.uid;
   const scoreData = {
-    uid: user.uid,
-    username: user.displayName || "Guest",
+    uid: userId,
+    username: username,
     level: level,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
-  if (user.isAnonymous) {
-    firebase
-      .database()
-      .ref("scores/" + user.uid + "/" + Date.now())
-      .set(scoreData);
-  } else {
-    firebase
-      .database()
-      .ref("globalScores/" + user.uid + "_" + Date.now())
-      .set(scoreData);
-  }
+
+  firebase
+    .database()
+    .ref("globalScores/" + userId)
+    .set(scoreData);
 }
 
-// Call saveScore(level) in your game over logic before resetting level
+function showGlobalScores() {
+  firebase
+    .database()
+    .ref("globalScores")
+    .orderByChild("level")
+    .limitToLast(10)
+    .once("value")
+    .then(function (snapshot) {
+      const scores = [];
+      snapshot.forEach((child) => {
+        scores.push(child.val());
+      });
+      scores.sort((a, b) => b.level - a.level);
+
+      let html = "<h3>Top 10 Global Scores</h3><ol>";
+      scores.forEach((s) => {
+        const uname = s.username ? s.username : "User-" + s.uid.slice(-5);
+        html += `<li><strong>${uname}</strong> &mdash; Level: ${s.level}</li>`;
+      });
+      html += "</ol>";
+      document.getElementById("global-score-content").innerHTML = html;
+    })
+    .catch(function (error) {
+      document.getElementById("global-score-content").innerHTML =
+        "<p>Error loading scores.</p>";
+    });
+}
