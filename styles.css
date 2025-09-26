@@ -542,6 +542,35 @@ body.synthwave-theme .theme-btn.active {
   }
 }
 
+/* Mobile-friendly buttons and containers */
+@media (max-width: 700px) {
+  .container {
+    max-width: 98vw !important;
+    padding: 8vw 2vw 18vw 2vw !important;
+  }
+  .btn {
+    width: 38vw !important;
+    height: 38vw !important;
+    font-size: 1.2em !important;
+    margin: 3vw !important;
+  }
+  #level-title {
+    font-size: 1.3em !important;
+    margin-top: 8vw !important;
+  }
+  .modal-overlay,
+  .score-modal-overlay {
+    align-items: flex-start !important;
+    padding-top: 10vw !important;
+    width: 100vw !important;
+  }
+  #global-score-modal {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

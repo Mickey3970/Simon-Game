@@ -84,59 +84,97 @@ function animatePress(currentColor) {
   }, 100);
 }
 
+// --- Web Audio API Setup ---
+const audioCtx = window.AudioContext
+  ? new AudioContext()
+  : new webkitAudioContext();
+const audioBuffers = {};
+
+function loadAudio(name) {
+  if (audioBuffers[name]) return Promise.resolve(audioBuffers[name]);
+  return fetch(`sounds/${name}.mp3`)
+    .then((response) => response.arrayBuffer())
+    .then((data) => audioCtx.decodeAudioData(data))
+    .then((buffer) => {
+      audioBuffers[name] = buffer;
+      return buffer;
+    });
+}
+
 function playSound(name) {
-  try {
-    var audio = new Audio("sounds/" + name + ".mp3");
-    audio.play().catch(function (error) {
-      // Handle autoplay policy restrictions gracefully
+  loadAudio(name)
+    .then((buffer) => {
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioCtx.destination);
+      source.start(0);
+    })
+    .catch((error) => {
       console.log("Audio playback failed:", error);
     });
-  } catch (error) {
-    console.log("Audio file not found:", name);
+}
+
+// --- Responsive Button Sizing ---
+function setButtonSizes() {
+  const isMobile = window.innerWidth < 700;
+  $(".btn").css({
+    width: isMobile ? "38vw" : "160px",
+    height: isMobile ? "38vw" : "160px",
+    fontSize: isMobile ? "1.2em" : "1.5em",
+    margin: isMobile ? "3vw" : "18px",
+  });
+  $(".container").css({
+    padding: isMobile ? "8vw 2vw 18vw 2vw" : "40px 40px 60px 40px",
+    maxWidth: isMobile ? "98vw" : "540px",
+  });
+  $("#level-title").css({
+    fontSize: isMobile ? "1.3em" : "2em",
+    marginTop: isMobile ? "8vw" : "40px",
+  });
+}
+window.addEventListener("resize", setButtonSizes);
+window.addEventListener("DOMContentLoaded", setButtonSizes);
+
+// --- Mobile Modal & Scoreboard Styles ---
+function setModalStyles() {
+  const isMobile = window.innerWidth < 700;
+  $(".modal-overlay, .score-modal-overlay").css({
+    alignItems: isMobile ? "flex-start" : "center",
+    paddingTop: isMobile ? "10vw" : "0",
+  });
+  $(".score-modal-overlay").css({
+    width: isMobile ? "100vw" : "auto",
+  });
+  $("#global-score-modal").css({
+    left: isMobile ? "0" : "",
+    right: isMobile ? "0" : "",
+    width: isMobile ? "100vw" : "auto",
+  });
+}
+window.addEventListener("resize", setModalStyles);
+window.addEventListener("DOMContentLoaded", setModalStyles);
+
+// --- Touch Event Support for Buttons ---
+$(".btn").on("touchstart", function (e) {
+  e.preventDefault();
+  $(this).addClass("pressed");
+  if (started) {
+    var userChosenColour = $(this).attr("id");
+    userClickedPattern.push(userChosenColour);
+    playSound(userChosenColour);
+    animatePress(userChosenColour);
+    checkAnswer(userClickedPattern.length - 1);
   }
-}
+});
+$(".btn").on("touchend", function (e) {
+  e.preventDefault();
+  $(this).removeClass("pressed");
+});
 
-function startOver() {
-  level = 0;
-  gamePattern = [];
-  started = false;
-  $("#level-title").text("Press A Key to Start");
-}
-
-// Theme-aware functions (optional enhancements)
-function getThemeSpecificSound(color) {
-  const currentTheme = document.body.className;
-
-  // You could have different sounds for different themes
-  if (currentTheme.includes("space-theme")) {
-    return "sounds/space-" + color + ".mp3";
-  } else if (currentTheme.includes("synthwave-theme")) {
-    return "sounds/synth-" + color + ".mp3";
-  }
-
-  return "sounds/" + color + ".mp3";
-}
-
-// Enhanced button highlighting for themes
-function enhancedAnimatePress(currentColor) {
-  const $button = $("#" + currentColor);
-  const currentTheme = document.body.className;
-
-  $button.addClass("pressed");
-
-  // Add theme-specific effects
-  if (currentTheme.includes("space-theme")) {
-    $button.addClass("space-glow");
-    setTimeout(() => $button.removeClass("space-glow"), 300);
-  } else if (currentTheme.includes("synthwave-theme")) {
-    $button.addClass("neon-flash");
-    setTimeout(() => $button.removeClass("neon-flash"), 300);
-  }
-
-  setTimeout(function () {
-    $button.removeClass("pressed");
-  }, 100);
-}
+// --- Mobile-Friendly Modal Close ---
+$(".modal-btn").on("touchstart", function () {
+  $(this).click();
+});
 
 // Optional: Add score tracking for leaderboard preparation
 var score = 0;
