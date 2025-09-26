@@ -52,6 +52,8 @@ function checkAnswer(currentLevel) {
       $("body").removeClass("shake");
     }, 200);
 
+    // Save score when game ends
+    saveScore(level);
     startOver();
   }
 }
@@ -235,6 +237,7 @@ function openScoreModal(type) {
   }
   document.body.style.overflow = "hidden";
 }
+
 function closeScoreModals() {
   document.getElementById("global-score-modal").style.display = "none";
   document.body.style.overflow = "";
@@ -244,24 +247,49 @@ function closeScoreModals() {
 document.getElementById("global-score-modal").onclick = function (e) {
   if (e.target === this) closeScoreModals();
 };
+
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape") closeScoreModals();
 });
 
-// Button events
-
+// FIXED: Global Scores Button Handler
 document.getElementById("global-scores-btn").onclick = function () {
-  document.getElementById("global-score-modal").style.display = "block";
-  showGlobalScores();
+  console.log("Global scores button clicked");
+  document.getElementById("global-score-modal").style.display = "flex";
+  document.body.style.overflow = "hidden";
+  loadGlobalScores(); // Call the correct function
 };
 
+// FIXED: Global Scores Loading Function
 function loadGlobalScores() {
+  console.log("loadGlobalScores() called");
+
+  const contentElement = document.getElementById("global-score-content");
+  if (!contentElement) {
+    console.error("global-score-content element not found!");
+    return;
+  }
+
   const user = firebase.auth().currentUser;
-  let html = "<h3>Global Scores</h3>";
+  console.log(
+    "Current user:",
+    user ? user.displayName || "Anonymous" : "No user"
+  );
+
+  let html = "<h3>🏆 Global Leaderboard</h3>";
+
   if (!user || user.isAnonymous) {
-    html += `<p>Sign in with Google to compete globally!</p>
-      <button id="global-google-auth-btn" class="modal-btn google" style="margin:16px auto 0 auto;display:block;">Sign in with Google</button>`;
-    document.getElementById("global-score-content").innerHTML = html;
+    // User not signed in - show sign-in prompt
+    html += `
+      <p>Sign in with Google to compete globally and view the leaderboard!</p>
+      <button id="global-google-auth-btn" class="modal-btn google" style="margin:16px auto 0 auto;display:block;">
+        Sign in with Google
+      </button>
+      <button onclick="closeScoreModals()" class="modal-btn" style="margin-top: 10px;">
+        Close
+      </button>
+    `;
+    contentElement.innerHTML = html;
 
     // Attach Google sign-in handler for the modal button
     setTimeout(() => {
@@ -270,6 +298,7 @@ function loadGlobalScores() {
         btn.onclick = function () {
           var provider = new firebase.auth.GoogleAuthProvider();
           var currentUser = firebase.auth().currentUser;
+
           firebase
             .auth()
             .signInWithPopup(provider)
@@ -280,13 +309,15 @@ function loadGlobalScores() {
                   .linkWithCredential(credential)
                   .then(function (usercred) {
                     migrateGuestData(currentUser.uid, usercred.user.uid);
-                    closeScoreModals();
+                    // Reload the scores after successful sign-in
+                    setTimeout(() => loadGlobalScores(), 500);
                   })
                   .catch(function (error) {
                     alert("Linking failed: " + error.message);
                   });
               } else {
-                closeScoreModals();
+                // Reload the scores after successful sign-in
+                setTimeout(() => loadGlobalScores(), 500);
               }
             })
             .catch(function (error) {
@@ -297,31 +328,75 @@ function loadGlobalScores() {
     }, 0);
     return;
   }
+
+  // User is signed in - show loading state first
+  contentElement.innerHTML = html + "<p>Loading scores...</p>";
+
+  // Fetch global scores
   firebase
     .database()
     .ref("globalScores")
     .orderByChild("level")
     .limitToLast(10)
-    .once("value", function (snapshot) {
+    .once("value")
+    .then(function (snapshot) {
+      console.log("Firebase data received:", snapshot.exists());
+
       let scores = [];
-      snapshot.forEach((child) => scores.push(child.val()));
-      scores.sort((a, b) => b.level - a.level);
-      html += "<ol>";
-      if (scores.length === 0) html += "<p>No global scores yet!</p>";
-      scores.forEach((s) => {
-        const uname = s.username || s.displayName || "Player";
-        html += `<li><strong>${uname}</strong> — Level: ${s.level} | Score: ${
-          s.level - 1
-        }</li>`;
+      snapshot.forEach((child) => {
+        const data = child.val();
+        if (data && data.level) {
+          scores.push(data);
+        }
       });
-      html += "</ol>";
-      document.getElementById("global-score-content").innerHTML = html;
+
+      console.log("Scores found:", scores.length);
+
+      // Sort by level descending (highest first)
+      scores.sort((a, b) => (b.level || 0) - (a.level || 0));
+
+      if (scores.length === 0) {
+        html += "<p>🎮 No global scores yet! Be the first to set a record!</p>";
+      } else {
+        html += "<ol style='padding-left: 20px; text-align: left;'>";
+        scores.forEach((s, index) => {
+          const uname = s.username || s.displayName || "Anonymous Player";
+          const medal =
+            index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "";
+          html += `<li style='margin: 8px 0; padding: 8px; background: rgba(100, 255, 218, 0.1); border-radius: 5px;'>
+            ${medal} <strong>${uname}</strong> — Level: ${s.level}
+          </li>`;
+        });
+        html += "</ol>";
+      }
+
+      // Add close button
+      html += `<button onclick="closeScoreModals()" class="modal-btn" style="margin-top: 16px;">Close</button>`;
+
+      contentElement.innerHTML = html;
+      console.log("Global scores displayed successfully");
+    })
+    .catch(function (error) {
+      console.error("Error loading global scores:", error);
+      contentElement.innerHTML =
+        html +
+        `
+        <p>❌ Error loading scores: ${error.message}</p>
+        <button onclick="loadGlobalScores()" class="modal-btn" style="margin: 10px;">🔄 Retry</button>
+        <button onclick="closeScoreModals()" class="modal-btn" style="margin: 10px;">Close</button>
+      `;
     });
 }
 
+// FIXED: Save Score Function
 function saveScore(level) {
+  console.log("saveScore() called with level:", level);
+
   const user = firebase.auth().currentUser;
-  if (!user || user.isAnonymous) return; // Only save for Google users
+  if (!user || user.isAnonymous) {
+    console.log("Cannot save score: user not signed in with Google");
+    return;
+  }
 
   const username = user.displayName || "Anonymous";
   const userId = user.uid;
@@ -332,36 +407,25 @@ function saveScore(level) {
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 
+  console.log("Saving score data:", scoreData);
+
   firebase
     .database()
     .ref("globalScores/" + userId)
-    .set(scoreData);
+    .set(scoreData)
+    .then(() => {
+      console.log("Score saved successfully");
+    })
+    .catch((error) => {
+      console.error("Error saving score:", error);
+    });
 }
 
-function showGlobalScores() {
-  firebase
-    .database()
-    .ref("globalScores")
-    .orderByChild("level")
-    .limitToLast(10)
-    .once("value")
-    .then(function (snapshot) {
-      const scores = [];
-      snapshot.forEach((child) => {
-        scores.push(child.val());
-      });
-      scores.sort((a, b) => b.level - a.level);
+// REMOVED: Duplicate showGlobalScores function that was causing conflicts
 
-      let html = "<h3>Top 10 Global Scores</h3><ol>";
-      scores.forEach((s) => {
-        const uname = s.username ? s.username : "User-" + s.uid.slice(-5);
-        html += `<li><strong>${uname}</strong> &mdash; Level: ${s.level}</li>`;
-      });
-      html += "</ol>";
-      document.getElementById("global-score-content").innerHTML = html;
-    })
-    .catch(function (error) {
-      document.getElementById("global-score-content").innerHTML =
-        "<p>Error loading scores.</p>";
-    });
+// Add this function if it's missing (referenced in Google auth)
+function migrateGuestData(guestUid, googleUid) {
+  console.log("Migrating data from guest to Google user");
+  // Add any data migration logic here if needed
+  // For now, just log the migration
 }
