@@ -393,8 +393,12 @@ function saveScore(level) {
   console.log("saveScore() called with level:", level);
 
   const user = firebase.auth().currentUser;
-  if (!user || user.isAnonymous) {
-    console.log("Cannot save score: user not signed in with Google");
+  if (!user) {
+    console.log("No user signed in");
+    return;
+  }
+  if (user.isAnonymous) {
+    console.log("User is anonymous, not saving to globalScores");
     return;
   }
 
