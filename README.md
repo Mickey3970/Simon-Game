@@ -82,7 +82,7 @@ Test your memory by repeating increasingly complex patterns. How far can you go?
 ## 🚀 Quick Start
 
 ### Play Online
-Simply visit **[🕹️ your-live-demo-url](your-live-demo-url)** and start playing!
+Simply visit **[live-url](your-live-demo-url)** and start playing!
 
 ### Run Locally
 
@@ -122,7 +122,7 @@ To enable authentication and leaderboards:
   <img width="1918" height="927" alt="image" src="https://github.com/user-attachments/assets/0c54ae23-9eac-4e03-bfb0-75d9108c5518" />
 
   
-  <img src="https://via.placeholder.com/800x450/667eea/ffffff?text=Simon+Game+Preview" alt="Simon Game Preview" width="80%"/>
+ 
   
 </div>
 
@@ -137,7 +137,7 @@ To enable authentication and leaderboards:
 - [ ] 🎵 **Custom Sound Packs** — Choose your audio theme
 - [ ] 🌍 **Multiple Languages** — Expand accessibility
 
-*Want to contribute? Check out our [contribution guidelines](CONTRIBUTING.md)!*
+
 
 ---
 
