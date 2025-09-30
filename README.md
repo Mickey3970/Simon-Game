@@ -1,96 +1,173 @@
-🎮 Simon Game Web App
+# 🎮 Simon Game
 
-A web version of the classic Simon memory game built in vanilla JavaScript, HTML, and CSS, hosted on Firebase. Players try to repeat increasingly complex color/sound patterns.
+<div align="center">
+  
+  ### *A modern twist on the classic memory game*
+  
+  ![Game Status](https://img.shields.io/badge/status-live-success?style=flat-square)
+  ![Firebase](https://img.shields.io/badge/Firebase-Hosting-orange?style=flat-square&logo=firebase)
+  ![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-yellow?style=flat-square&logo=javascript)
+  
+  **[🕹️ Play Now](https://simon-game-cec07.web.app/)** | **[📖 Report Bug](https://github.com/Mickey3970/Simon-Game/issues)** | **[✨ Request Feature](https://github.com/Mickey3970/Simon-Game/issues)**
+  
+  > ⚠️ **Best experienced on desktop or laptop** — mobile support coming soon!
 
-🚀 Live Demo
+</div>
 
-🕹 Play it here!
+---
 
-⚠️ Note: The app is not mobile responsive currently. The best experience is on a desktop or a laptop.
+## 🌟 What is Simon?
 
-📌 Features
+Remember those sequences of flashing colors and sounds? That's **Simon**! This web adaptation brings the nostalgic memory game to your browser with modern features like cloud-based highscores, multiple themes, and Google authentication.
 
-🟩 “Press A Key to Start” screen — the game begins when you press a key.
+Test your memory by repeating increasingly complex patterns. How far can you go? 🧠
 
-👤 Play as Guest / Sign in with Google — option to use authentication.
+---
 
-📈 Global Highscores — view top scores across all users.
+## ✨ Features
 
-🎨 Multiple Themes — choose between Classic, Space, and Synthwave looks.
+<table>
+<tr>
+<td width="50%">
 
-🔁 Classic Simon gameplay — repeating color/sound patterns (see rules below).
+### 🎯 Core Gameplay
+- **Quick Start** — Press any key to begin
+- **Progressive Difficulty** — Patterns grow longer each round
+- **Audio Feedback** — Unique tones for each color
+- **Instant Restart** — Jump back in after game over
 
-🎲 How the Game Works (Rules)
+</td>
+<td width="50%">
 
-Start the Game
+### 🎨 Enhanced Experience
+- **3 Visual Themes** — Classic, Space & Synthwave
+- **Google Sign-In** — Save your progress
+- **Global Leaderboard** — Compete worldwide
+- **Guest Mode** — Play without signing in
 
-Press any key to start the sequence.
+</td>
+</tr>
+</table>
 
-Sign in with Google if you want your score saved globally.
+---
 
-Simon’s Sequence
+## 🎲 How to Play
 
-The game flashes a sequence of colors, each paired with a distinct tone.
+```
+1️⃣ START    →  Press any key to begin the sequence
+2️⃣ WATCH    →  Simon shows a pattern of colors/sounds
+3️⃣ REPEAT   →  Click the colors in the exact order
+4️⃣ ADVANCE  →  Each round adds one more step
+5️⃣ COMPETE  →  Beat your high score and climb the leaderboard!
+```
 
-The sequence starts short (one step) and grows by one each round.
+**💡 Pro Tip:** Sign in with Google to save your scores and compete globally!
 
-Your Turn
+---
 
-Click the buttons in the exact order Simon showed.
+## 🛠️ Tech Stack
 
-Every correct sequence advances you to the next round.
+<div align="center">
 
-Game Over
+| Frontend | Backend & Services | Audio |
+|:--------:|:------------------:|:-----:|
+| ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) | ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black) | ![Web Audio API](https://img.shields.io/badge/Web_Audio_API-000000?style=for-the-badge) |
+| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white) | ![Firestore](https://img.shields.io/badge/Firestore-039BE5?style=for-the-badge&logo=firebase&logoColor=white) | |
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) | ![Auth](https://img.shields.io/badge/Firebase_Auth-4285F4?style=for-the-badge&logo=google&logoColor=white) | |
 
-If you press the wrong color or break the sequence, the game ends.
+</div>
 
-Restart by pressing a key again.
+---
 
-Scoring
+## 🚀 Quick Start
 
-Your score = the length of the sequence you survived.
+### Play Online
+Simply visit **[🕹️ your-live-demo-url](your-live-demo-url)** and start playing!
 
-High scores are stored and compared globally (if you’re signed in).
+### Run Locally
 
-🛠 Tech Stack
-Technology	Purpose
-HTML / CSS	UI layout, styling, and theming
-Vanilla JavaScript	Core game logic, event handling, state mgmt
-Web Audio API: Unique sounds for each color button
-Firebase Hosting	Web hosting
-Firebase Auth	Google login for players
-Firebase Firestore	Global highscore storage
-🔧 How to Run Locally
+```bash
+# Clone the repository
 git clone https://github.com/yourusername/simon-game.git
+
+# Navigate to directory
 cd simon-game
-# open index.html in your browser
 
+# Open in browser
+open index.html
+```
 
-To enable Firebase features:
+### 🔥 Setup Firebase (Optional)
 
-Create a Firebase project.
+To enable authentication and leaderboards:
 
-Replace the Firebase config in the script with your own.
+1. Create a [Firebase project](https://console.firebase.google.com/)
+2. Enable **Firestore Database** and **Google Authentication**
+3. Replace Firebase config in your script:
+   ```javascript
+   const firebaseConfig = {
+     apiKey: "YOUR_API_KEY",
+     authDomain: "YOUR_AUTH_DOMAIN",
+     projectId: "YOUR_PROJECT_ID",
+     // ... other config
+   };
+   ```
 
-Enable Firestore + Authentication (Google Sign-In).
+---
 
-💡 Future Improvements
+## 📸 Preview
 
-📱 Mobile Responsiveness — adapt layout and controls for smartphones.
+<div align="center">
+  
+  <img width="1918" height="927" alt="image" src="https://github.com/user-attachments/assets/0c54ae23-9eac-4e03-bfb0-75d9108c5518" />
 
-👥 Multiplayer Mode — side-by-side or online play with friends.
+  
+  <img src="https://via.placeholder.com/800x450/667eea/ffffff?text=Simon+Game+Preview" alt="Simon Game Preview" width="80%"/>
+  
+</div>
 
-🏆 Expanded Stats — longest streaks, averages, etc.
+---
 
-🔐 Private Scores — allow hiding scores from the global leaderboard.
+## 🗺️ Roadmap
 
-📸 Screenshot
+- [ ] 📱 **Mobile Responsive Design** — Touch-friendly interface
+- [ ] 👥 **Multiplayer Mode** — Challenge friends in real-time
+- [ ] 📊 **Enhanced Statistics** — Track streaks, averages, and more
+- [ ] 🔐 **Privacy Options** — Toggle score visibility
+- [ ] 🎵 **Custom Sound Packs** — Choose your audio theme
+- [ ] 🌍 **Multiple Languages** — Expand accessibility
 
-📬 Contact
+*Want to contribute? Check out our [contribution guidelines](CONTRIBUTING.md)!*
 
-Got feedback, ideas, or want to collaborate? Reach out!
+---
 
-Harsh – Computer Science Undergrad
-📧 harsh2004mckv@gmail.com
+## 👨‍💻 About the Developer
 
-🔗 LinkedIn[www.linkedin.com/in/harsh-kumar-singh-57392b27a]
+<div align="center">
+
+**Harsh Kumar Singh**  
+*Computer Science Undergraduate*
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/harsh-kumar-singh-57392b27a)
+[![Email](https://img.shields.io/badge/Email-Contact-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:harsh2004mckv@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github)](https://github.com/yourusername)
+
+*Open to feedback, collaboration, and new ideas!*
+
+</div>
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+**Made with 💙 and ☕**
+
+*If you enjoyed this project, consider giving it a ⭐!*
+
+</div>
